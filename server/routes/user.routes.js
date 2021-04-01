@@ -1,24 +1,37 @@
+var userController = require('../controllers/user.controller.js');
+var router = require("express").Router();
+
 module.exports = (app, passport) => {
-    const users = require("../controllers/user.controller.js");
 
-    var router = require("express").Router();
+    app.post('/signup', userController.signup);
 
-    router.get("/register", users.create);
+    app.post("/login", (req, res, next) => {
+        passport.authenticate("local", (err, user, info) => {
+            if (err) {
+                console.log('sadge')
+                throw err;
+            }
+            if (!user) {
+                console.log(info)
+                res.send("No User Exists");
+            }
+            else {
+                if (err) throw err;
+                res.send("Successfully Authenticated");
+                console.log(req.user);
+            }
+        })(req, res, next);
+    });
 
-    router.get("/login", 
-        passport.authenticate('local', { failureRedirect: '/login'}),
-        (req, res) => {
-            res.redirect('/')
-        }
-    );
+    app.get('/user', userController.getUser)
 
-    // router.get("/", users.findAll);
+    // app.get("/", userController.findAll);
 
-    // router.get("/:id", users.findOne);
+    // app.get("/:id", userController.findOne);
 
-    // router.post("/:id", users.update);
+    // app.post("/:id", userController.update);
 
-    // router.post("/:id", users.delete);
+    // app.post("/:id", userController.delete);
 
-    app.use("/api/users", router);
+    app.use("/", router);
 };

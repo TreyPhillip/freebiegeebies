@@ -20,7 +20,8 @@ module.exports = (sequelize, Sequelize) => {
         },
         verified: {
             type: Sequelize.BOOLEAN
-        }
+        },
     });
+    
     return User;
 }

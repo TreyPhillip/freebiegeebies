@@ -1,21 +1,23 @@
 const db = require("../models");
 const User = db.users;
 const Op = db.Sequelize.Op;
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
 
-exports.create = (req, res) => {
+exports.signup = async (req, res) => {
     // if (!req.body.title) {
     //     res.status(400).send({
     //         message: "image must have a title"
     //     });
     // return;
     // }
+    const hashedPassword = await bcrypt.hash(req.body.user_password, 10)
 
     const user = {
-        userID: req.body.userID,
         user_email: req.body.user_email,
-        user_name: req.body.user_name,
-        user_password: req.body.user_password,
-        verified: req.body.verified
+        user_name: req.body.user_email,
+        user_password: hashedPassword,
+        verified: false
     };
 
     User.create(user)
@@ -29,6 +31,24 @@ exports.create = (req, res) => {
         });
     });
 };
+
+// exports.login = (req, res) => {
+//     passport.authenticate("local", (err, user, info) => {
+//         if (err) throw err;
+//         if (!user) res.send("No user exists");
+//         else{
+//             req.logIn(user, (err) => {
+//                 if (err) throw err;
+//                 res.send("successfully authenticated");
+//                 console.log(req.user);
+//             });
+//         }
+//     })
+// }
+
+exports.getUser = (req, res) => {
+    res.send(req.user)
+}
 
 exports.findAll = (req, res) => {
     const user_name = req.query.user_name;
@@ -46,19 +66,19 @@ exports.findAll = (req, res) => {
         });
 };
 
-exports.findOne = (req, res) => {
-    const UserID = req.params.UserID;
+// exports.findOne = (req, res) => {
+//     const UserID = req.params.UserID;
 
-    Image.findByPk(UserID)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: "error retrieving user with id=" + UserID
-        });
-    });
-};
+//     Image.findByPk(UserID)
+//     .then(data => {
+//         res.send(data);
+//     })
+//     .catch(err => {
+//         res.status(500).send({
+//             message: "error retrieving user with id=" + UserID
+//         });
+//     });
+// };
 
 exports.update = (req, res) => {
     const UserID = req.params.UserID;

@@ -28,14 +28,24 @@ export default function App() {
                 Add Image
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/signup" className="nav-link">
+                Register
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+            </li>
           </div>
         </nav>
         <Switch>
-          <Route path="/Home" component={Home}/>
+          <Route path="/home" component={Home}/>
           <Route exact path="/" component={Home}/>
-          <Route path="/Images" component={ImageList}/>
-          {/* <Route path="/Login" component={Login}/>
-          <Route path="/Register" component={Register}/> */}
+          <Route path="/images" component={ImageList}/>
+          <Route path="/Login" component={Login}/>
+          <Route path="/signup" component={Register}/>
         </Switch>
       </div>
     </Router>

@@ -1,63 +1,45 @@
 const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
-const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
-
-var corsOptions = {
-    origin: "http://localhost:8081"
-};
-
-app.use(
-    cors(
-        corsOptions
-    )
-);
-
-app.use(
-    bodyParser.json()
-);
-
-app.use(
-    bodyParser.urlencoded({ 
-        extended:true 
-    })
-);
-
-app.use(
-    session({
-        secret: 'simplord69', 
-        resave: true, 
-        saveUninitialized: true
-    })
-);
-
-app.use(
-    passport.initialize()
-);
-
-app.use(
-    passport.session()
-);
-
+const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const app = express();
 const db = require("./models");
 
+// middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended:true }));
+app.use(cors({
+    origin: "http://localhost:8081",
+    credentials: true
+}));
 
-app.get("/", (req, res) => {
-    res.json({ message: "test message" });
-});
+app.use(session({
+    secret: 'simplord69', 
+    resave: true, 
+    saveUninitialized: true
+}));
 
-require("./routes/image.routes")(app);
-require("./routes/user.routes")(app);
-require('./config/passport/passport.js')(passport, db.users)
+app.use(cookieParser("simplord69"));
 
-db.sequelize.sync();
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and re-sync db.");
-// });
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport/passport.js')(passport, app)
+
+require("./routes/image.routes.js")(app);
+require("./routes/user.routes.js")(app, passport);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`)
+    console.log(`Server is listening on port ${PORT}`);
 });
+
+db.sequelize.sync().then(function() {
+    console.log('Database looks good')
+}).catch(function(err) {
+    console.log(err, 'Something went wrong with the database update')
+});
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.");
+// });

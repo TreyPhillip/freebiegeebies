@@ -3,9 +3,9 @@ var router = require("express").Router();
 
 module.exports = (app, passport) => {
 
-    app.post('/signup', userController.signup);
+    app.post('/signup', checkNotAuthenticated, userController.signup);
 
-    app.post("/login", (req, res, next) => {
+    app.post("/login", checkNotAuthenticated, (req, res, next) => {
         passport.authenticate("local", (err, user, info) => {
             if (err) {
                 console.log('sadge')
@@ -34,4 +34,18 @@ module.exports = (app, passport) => {
     // app.post("/:id", userController.delete);
 
     app.use("/", router);
+
+    //unused for now
+    function checkAuthenticated(req, res, next) {
+        if (req.isAuthenticated()) {
+            return next()
+        }
+        res.redirect('/login')
+    }
+    function checkNotAuthenticated(req, res, next) {
+        if (req.isAuthenticated()) {
+            return res.redirect('/')
+        }
+        next()
+    }
 };

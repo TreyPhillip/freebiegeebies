@@ -32,19 +32,34 @@ exports.signup = async (req, res) => {
     });
 };
 
-// exports.login = (req, res) => {
-//     passport.authenticate("local", (err, user, info) => {
-//         if (err) throw err;
-//         if (!user) res.send("No user exists");
-//         else{
-//             req.logIn(user, (err) => {
-//                 if (err) throw err;
-//                 res.send("successfully authenticated");
-//                 console.log(req.user);
-//             });
-//         }
-//     })
-// }
+exports.login = (req, res, next) => {
+    passport.authenticate("local", {successRedirect: '/login', failureRedirect: '/'}, (err, user, info) => {
+        if (err) {
+            console.log('sadge');
+            throw err;
+        }
+
+        if (!user) {
+            res.send("No User Exists");
+        }
+        else {
+            req.logIn(user, (err) => {
+                if (err) {
+                    throw err;
+                }
+                res.send("Successfully Authenticated");
+                console.log(req.user);
+            });
+        }
+    })(req, res, next);
+}
+
+exports.logout = (req, res) => {
+    console.log("logging out..");
+    req.session.destroy();
+    req.logout();
+    res.redirect('/');
+}
 
 exports.getUser = (req, res) => {
     res.send(req.user)
@@ -66,19 +81,19 @@ exports.findAll = (req, res) => {
         });
 };
 
-// exports.findOne = (req, res) => {
-//     const UserID = req.params.UserID;
+exports.findOne = (req, res) => {
+    const UserID = req.params.UserID;
 
-//     Image.findByPk(UserID)
-//     .then(data => {
-//         res.send(data);
-//     })
-//     .catch(err => {
-//         res.status(500).send({
-//             message: "error retrieving user with id=" + UserID
-//         });
-//     });
-// };
+    User.findByPk(UserID)
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "error retrieving user with id=" + UserID
+        });
+    });
+};
 
 exports.update = (req, res) => {
     const UserID = req.params.UserID;

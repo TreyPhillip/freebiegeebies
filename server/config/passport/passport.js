@@ -16,7 +16,7 @@ module.exports = (passport) => {
             } else {
                 bcrypt.compare(user_password, user.user_password, (err, result) => {
                     if (err) {
-                        throw err;
+                        return done(err)
                     }
                     if (result === true) {
                         return done(null, user);
@@ -28,15 +28,10 @@ module.exports = (passport) => {
             }
         })
     );
-    passport.serializeUser((user, cb) => {
-        cb(null, user.userID);
+    passport.serializeUser((user, done) => {
+        return done(null, user.userID);
     });
-    passport.deserializeUser((userID, cb) => {
-        User.findOne({ _userID: userID}, (err, user) => {
-            const userInformation = {
-                user_email: user.user_email,
-            };
-            cb(err, userInformation);
-        });
+    passport.deserializeUser((userID, done) => {
+        return done(null, User.findOne({ _userID: userID}))
     });
 };

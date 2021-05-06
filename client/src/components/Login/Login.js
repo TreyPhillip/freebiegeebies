@@ -5,7 +5,6 @@ export default function Login() {
     const [loginEmail, setLoginEmail] = useState("")
     const [loginPassword, setLoginPassword] = useState("");
     const login = () => {
-        //console.log(loginPassword, loginEmail)
         axios({
             method: "POST",
             data: {
@@ -14,7 +13,7 @@ export default function Login() {
             },
             withCredentials: true,
             url: "http://localhost:8080/login"
-        }).then((data) => console.log(data));
+        }).then((res) => console.log(res));
     };
 
     return (

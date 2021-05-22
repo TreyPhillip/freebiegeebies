@@ -14,7 +14,7 @@ module.exports = (passport) => {
             if (user === null) {
                 return done(null, false);
             } else {
-                bcrypt.compare(user_password, user.user_password, (err, result) => {
+                await bcrypt.compare(user_password, user.user_password, (err, result) => {
                     if (err) {
                         return done(err)
                     }
@@ -31,7 +31,10 @@ module.exports = (passport) => {
     passport.serializeUser((user, done) => {
         return done(null, user.userID);
     });
-    passport.deserializeUser((userID, done) => {
-        return done(null, User.findOne({ _userID: userID}))
+    passport.deserializeUser(async(userID, done) => {
+        return done(null, await User.findOne({
+            where: { userID: userID}, 
+            attributes: ['user_name', 'user_email', 'user_image_url']
+        }))
     });
 };

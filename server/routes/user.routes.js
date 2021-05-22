@@ -3,18 +3,15 @@ var router = require("express").Router();
 
 module.exports = (app, passport) => {
 
-    app.post('/signup', userController.signup);
+    app.post("/signup", checkNotAuthenticated, userController.signup);
 
-    app.post("/login", userController.login);
+    app.post("/login", checkNotAuthenticated, userController.login);
 
-    app.get('/logout', userController.logout);
+    app.get("/logout", checkAuthenticated, userController.logout);
 
-    // app.get('/logout', (req, res) => {
-    //     req.logout();
-    //     res.redirect('/');
-    // });
+    app.get("/user", checkAuthenticated, userController.getUser);
 
-    app.get('/user', userController.getUser);
+    app.get("/user/auth", userController.isAuth)
 
     app.get("/", userController.findAll);
 
@@ -24,24 +21,21 @@ module.exports = (app, passport) => {
 
     app.post("/:id", userController.delete);
 
-    app.get("/user", (req, res) => {
-        res.send(req.user);
-    });
-
     app.use("/", router);
 
-    //unused for now
+    
     function checkAuthenticated(req, res, next) {
         if (req.isAuthenticated()) {
-            console.log('you are already authenticated')
+            console.log('User is Authenticated')
             return next()
         }
+        // occasionally this causes ERR_TOO_MANY_REDIRECTS, but I have no idea how to reproduce it
         res.redirect('/login')
     }
     function checkNotAuthenticated(req, res, next) {
         if (req.isAuthenticated()) {
-            
-            return res.redirect('/home')
+            console.log('User is Authenticated')
+            res.redirect('/home')
         }
         next()
     }

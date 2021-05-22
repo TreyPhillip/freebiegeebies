@@ -28,13 +28,15 @@ export default function ImageList() {
     }, [])
 
     return (
-        <div className="image-container">
-            {imageData.map((image, idx) => (
-            <div key={idx}>
-                <img width="864" height="576" src={image.image_URL}/>
-                <p>{image.title}</p>
+        <main>
+            <div className="image-container">
+                {imageData.map((image, idx) => (
+                <div key={idx}>
+                    <img width="864" height="576" alt={image.title} src={image.image_URL}/>
+                    <p>{image.title}</p>
+                </div>
+                ))}
             </div>
-            ))}
-        </div>
+        </main>
     );
 }

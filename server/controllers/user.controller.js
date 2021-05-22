@@ -5,25 +5,20 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
 exports.signup = async (req, res) => {
-    // if (!req.body.title) {
-    //     res.status(400).send({
-    //         message: "image must have a title"
-    //     });
-    // return;
-    // }
     const hashedPassword = await bcrypt.hash(req.body.user_password, 10)
 
     const user = {
         user_email: req.body.user_email,
         user_name: req.body.user_email,
         user_password: hashedPassword,
+        user_image_url: "https://res.cloudinary.com/freebiegeebies/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1613855150/samples/landscapes/nature-mountains.jpg",
         verified: false
     };
 
     User.create(user)
-        .then(data => {
-        res.send(data);
-    })
+        .then(
+        res.send("Signed Up Successfully")
+    )
     .catch(err => {
         res.status(500).send({
             message:
@@ -33,12 +28,10 @@ exports.signup = async (req, res) => {
 };
 
 exports.login = (req, res, next) => {
-    passport.authenticate("local", {successRedirect: '/login', failureRedirect: '/'}, (err, user, info) => {
+    passport.authenticate("local", {successRedirect: '/home', failureRedirect: '/login'}, (err, user, info) => {
         if (err) {
-            console.log('sadge');
             throw err;
         }
-
         if (!user) {
             res.send("No User Exists");
         }
@@ -48,21 +41,25 @@ exports.login = (req, res, next) => {
                     throw err;
                 }
                 res.send("Successfully Authenticated");
-                console.log(req.user);
             });
         }
     })(req, res, next);
 }
 
 exports.logout = (req, res) => {
-    console.log("logging out..");
-    req.session.destroy();
-    req.logout();
-    res.redirect('/');
+    req.session.destroy( function ( err ) {
+        res.send('Successfully Logged Out');
+    });
 }
 
 exports.getUser = (req, res) => {
-    res.send(req.user)
+    res.send(JSON.stringify(req.user))
+}
+
+exports.isAuth = (req, res) => {
+    if (req.user) {
+        res.send("user is authenticated")
+    }
 }
 
 exports.findAll = (req, res) => {

@@ -18,6 +18,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        user_image_url: {
+            type: Sequelize.STRING
+        },
         verified: {
             type: Sequelize.BOOLEAN
         },

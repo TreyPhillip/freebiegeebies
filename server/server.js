@@ -18,7 +18,10 @@ app.use(cors({
 app.use(session({
     secret: 'simplord69', 
     resave: true, 
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 3600000
+    }
 }));
 
 app.use(cookieParser("simplord69"));

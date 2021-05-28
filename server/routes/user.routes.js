@@ -35,7 +35,7 @@ module.exports = (app, passport) => {
     function checkNotAuthenticated(req, res, next) {
         if (req.isAuthenticated()) {
             console.log('User is Authenticated')
-            res.redirect('/home')
+            res.redirect('/')
         }
         next()
     }

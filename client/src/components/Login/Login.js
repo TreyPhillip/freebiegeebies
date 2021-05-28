@@ -22,6 +22,7 @@ export default function Login (props) {
                 props.setIsAuth(true);
             }
             console.log(res.data);
+            props.history.push("/home")
         });
     };
 

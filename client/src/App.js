@@ -1,11 +1,13 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import ImageList from "./components/Images/ImgageList";
+import ImageList from "./components/Images/ImageList";
+import Upload from "./components/Upload/Upload";
 import Home from "./components/Home/Home";
 import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import NavBar from './components/NavBar/NavBar';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -65,6 +67,7 @@ export default function App() {
               <Route path="/home" component={Home}/>
               <Route exact path="/" component={Home}/>
               <Route path="/images" component={ImageList}/>
+              <Route path="/upload" component={Upload}/>
               <Route 
                 path="/login" 
                 render={(props) => (

@@ -30,7 +30,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport/passport.js')(passport, app)
 
-require("./routes/image.routes.js")(app);
+require("./routes/upload.routes.js")(app);
 require("./routes/user.routes.js")(app, passport);
 
 const PORT = process.env.PORT || 8080;

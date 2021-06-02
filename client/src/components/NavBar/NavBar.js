@@ -35,11 +35,6 @@ export default function NavBar (props) {
                                     Images
                                 </Link>
                             </li>
-                            <li>
-                                <Link to="/add" className="dropdown-item">
-                                    Add Image
-                                </Link>
-                            </li>
                         </ul>
                     </li>
                 </div>
@@ -51,10 +46,18 @@ export default function NavBar (props) {
                         <div className="navbar-nav ml-auto ">
                             <li className="nav-item dropdown navbar-logged">
                                 <a className="nav-link dropdown-toggle" id="dropdownMenuButton" href="# "data-toggle="dropdown" aria-expanded="false">
+                                    {props.data.user_image_url ?
                                     <img src={props.data.user_image_url} alt="profile" className="profile-image"/>
+                                    :
+                                    <img src='' alt="profile" className="profile-image"/>
+                                    }
                                 </a>
                                 <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                    <li><a className="dropdown-item" href="# ">profile</a></li>
+                                    <li>
+                                        <Link to="/Upload" className="dropdown-item">
+                                            Upload
+                                        </Link>
+                                    </li>
                                     <li><a className="dropdown-item" href="# ">Another action</a></li>
                                     <li><a onClick={logOut} className="dropdown-item" href="# ">Log Out</a></li>
                                 </ul>
